@@ -24,16 +24,6 @@ const ACTIVITIES = MEDIA_ACTIVITIES;
 const ACTIVITY_LABELS = MEDIA_ACTIVITY_LABELS;
 const STATUSES = MEDIA_STATUSES;
 const STATUS_LABELS = MEDIA_STATUS_LABELS;
-const PIC_ORDER = [
-  "I Gusti Ngurah Mahendra Putra",
-  "I Kadek Tegar Suanda",
-  "Ni Putu Nathania Widayu Putri",
-  "Desak Made Listiyanti Praptiwi",
-  "Ni Putu Gitali Hrdayani Rajan",
-  "Davin Pradipa Ramadan",
-  "Tio Krisna",
-] as const;
-const KNOWN_PIC_NAMES: ReadonlySet<string> = new Set(PIC_ORDER);
 
 type Activity = (typeof ACTIVITIES)[number];
 type Status = MediaStatus;
@@ -501,7 +491,9 @@ export function MediaPartnersPage() {
       item.contact_name?.toLowerCase().includes(query);
     const matchesPic =
       selectedPic === "all" ||
-      getMemberName(target?.assigned_to ?? null) === selectedPic;
+      (selectedPic === "none"
+        ? !target?.assigned_to
+        : target?.assigned_to === selectedPic);
     const matchesStatus =
       selectedStatus === "all" ||
       target?.status === selectedStatus;
@@ -521,13 +513,18 @@ export function MediaPartnersPage() {
     mediaGroups.set(groupName, group);
   });
 
+  const memberNames = members
+    .filter((item: TeamMember) => item.is_active)
+    .map((item) => item.full_name);
+  const memberNameSet = new Set(memberNames);
+
   const groupOrder = [
-    ...PIC_ORDER,
+    ...memberNames.filter((name) => mediaGroups.has(name)),
     ...Array.from(mediaGroups.keys())
       .filter(
         (name) =>
           name !== "Belum ditentukan" &&
-          !KNOWN_PIC_NAMES.has(name),
+          !memberNameSet.has(name),
       )
       .sort((left, right) => left.localeCompare(right, "id")),
     "Belum ditentukan",
@@ -606,11 +603,14 @@ export function MediaPartnersPage() {
               onChange={(event) => setSelectedPic(event.target.value)}
             >
               <option value="all">Semua PIC</option>
-              {PIC_ORDER.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-              ))}
+              {members
+                .filter((item: TeamMember) => item.is_active)
+                .map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.full_name}
+                  </option>
+                ))}
+              <option value="none">Belum ditentukan</option>
             </select>
           </label>
 
@@ -982,6 +982,13 @@ export function MediaPartnersPage() {
                         </option>
                       ))}
                   </select>
+
+                  {!editingMedia && (
+                    <span className="form-field__hint">
+                      Kamu otomatis menjadi PIC media ini. Bisa diganti atau
+                      dikosongkan.
+                    </span>
+                  )}
                 </label>
 
                 <label className="form-field">

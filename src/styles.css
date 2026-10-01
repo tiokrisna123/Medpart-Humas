@@ -1615,6 +1615,13 @@ textarea:focus-visible {
   grid-column: 1 / -1;
 }
 
+.form-field__hint {
+  color: var(--color-muted);
+  font-size: 11.5px;
+  font-weight: 450;
+  line-height: 1.5;
+}
+
 .form-field input,
 .form-field select,
 .form-field textarea {
