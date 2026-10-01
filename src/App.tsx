@@ -493,7 +493,7 @@ function LoginPage() {
     <main className="login-setup">
       <div className="wordmark">
         <span className="wordmark__name">
-          MULIH
+          WCM Creative Space
         </span>
 
         <span className="wordmark__descriptor">
@@ -502,13 +502,13 @@ function LoginPage() {
       </div>
 
       <section className="panel login-setup__panel">
-        <p className="eyebrow">
+        <p style={{ textAlign: "center" }} className="eyebrow">
           AKSES RUANG KERJA HUMAS
         </p>
 
-        <h1>Masuk ke MULIH</h1>
+        <h1 style={{ textAlign: "center" }}>Login</h1>
 
-        <p className="login-description">
+        <p style={{ textAlign: "center" }} className="login-description">
           Pilih nama lengkap untuk masuk ke ruang kerja Humas.
         </p>
 
@@ -524,6 +524,7 @@ function LoginPage() {
             onSubmit={handleLogin}
           >
             <label
+              style={{ textAlign: "center" }}
               className="login-form__label"
               htmlFor="member"
             >
