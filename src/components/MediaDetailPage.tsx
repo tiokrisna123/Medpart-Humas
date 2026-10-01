@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Globe, Instagram } from "lucide-react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import { DataState } from "./DataState";
@@ -8,6 +9,7 @@ import {
   type FollowUpTarget,
 } from "../data/followUps";
 import {
+  buildInstagramUrl,
   MEDIA_ACTIVITY_LABELS,
   MEDIA_STATUS_LABELS,
 } from "../data/media";
@@ -451,10 +453,45 @@ export function MediaDetailPage() {
       <section className="page-intro">
         <p className="eyebrow">PROFIL PARTNER</p>
         <h2>{partner.name}</h2>
-        <p>
-          {partner.instagram || "Instagram belum dicatat"}
-          {partner.description ? ` · ${partner.description}` : ""}
-        </p>
+
+        {partner.instagram || partner.website_url ? (
+          <div className="social-links">
+            {partner.instagram && (
+              <a
+                className="social-link"
+                href={buildInstagramUrl(partner.instagram)}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Buka Instagram ${partner.name}`}
+              >
+                <Instagram size={15} aria-hidden="true" />
+                {partner.instagram}
+              </a>
+            )}
+
+            {partner.website_url && (
+              <a
+                className="social-link"
+                href={partner.website_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Buka website ${partner.name}`}
+              >
+                <Globe size={15} aria-hidden="true" />
+                Website
+              </a>
+            )}
+          </div>
+        ) : (
+          <p className="page-intro__description">
+            Instagram dan website belum dicatat.
+          </p>
+        )}
+
+        {partner.description && (
+          <p className="page-intro__description">{partner.description}</p>
+        )}
+
         <Link className="text-link" to="/media">
           Kembali ke Media Partner
         </Link>

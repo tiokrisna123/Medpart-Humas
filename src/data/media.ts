@@ -40,3 +40,19 @@ export const MEDIA_STATUS_LABELS = {
 
 export type MediaActivity = (typeof MEDIA_ACTIVITIES)[number];
 export type MediaStatus = (typeof MEDIA_STATUSES)[number];
+
+export function buildInstagramUrl(handle: string): string {
+  const trimmed = handle.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  const lower = trimmed.toLowerCase();
+
+  if (lower.startsWith("http://") || lower.startsWith("https://")) {
+    return trimmed;
+  }
+
+  return `https://instagram.com/${trimmed.replace(/^@+/, "")}`;
+}

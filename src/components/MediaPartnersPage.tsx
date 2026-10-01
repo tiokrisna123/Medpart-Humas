@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  Eye,
+  Globe,
+  Instagram,
   Plus,
   RefreshCw,
   Search,
@@ -13,6 +16,7 @@ import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { toDateTimeLocalValue } from "../data/followUps";
 import { useMember, type TeamMember } from "../lib/MemberContext";
 import {
+  buildInstagramUrl,
   MEDIA_ACTIVITIES,
   MEDIA_ACTIVITY_LABELS,
   MEDIA_STATUSES,
@@ -488,7 +492,8 @@ export function MediaPartnersPage() {
       !query ||
       item.name.toLowerCase().includes(query) ||
       item.instagram?.toLowerCase().includes(query) ||
-      item.contact_name?.toLowerCase().includes(query);
+      item.contact_name?.toLowerCase().includes(query) ||
+      item.website_url?.toLowerCase().includes(query);
     const matchesPic =
       selectedPic === "all" ||
       (selectedPic === "none"
@@ -701,7 +706,7 @@ export function MediaPartnersPage() {
                   <thead>
                     <tr>
                       <th>Media</th>
-                      <th>Instagram</th>
+                      <th>Medsos</th>
                       <th>Kegiatan</th>
                       <th>Status</th>
                       <th>PIC</th>
@@ -729,7 +734,39 @@ export function MediaPartnersPage() {
                             )}
                           </td>
 
-                          <td>{item.instagram || "—"}</td>
+                          <td>
+                            {item.instagram || item.website_url ? (
+                              <div className="social-links">
+                                {item.instagram && (
+                                  <a
+                                    className="social-link"
+                                    href={buildInstagramUrl(item.instagram)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`Buka Instagram ${item.name}`}
+                                  >
+                                    <Instagram size={15} aria-hidden="true" />
+                                    {item.instagram}
+                                  </a>
+                                )}
+
+                                {item.website_url && (
+                                  <a
+                                    className="social-link"
+                                    href={item.website_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`Buka website ${item.name}`}
+                                  >
+                                    <Globe size={15} aria-hidden="true" />
+                                    Website
+                                  </a>
+                                )}
+                              </div>
+                            ) : (
+                              "—"
+                            )}
+                          </td>
 
                           <td>
                             {target?.activity
@@ -759,6 +796,14 @@ export function MediaPartnersPage() {
 
                           <td>
                             <div className="table-actions">
+                              <Link
+                                className="icon-button"
+                                aria-label={`Detail media ${item.name}`}
+                                to={`/media/${item.id}`}
+                              >
+                                <Eye size={16} aria-hidden="true" />
+                              </Link>
+
                               <button
                                 type="button"
                                 className="icon-button"
