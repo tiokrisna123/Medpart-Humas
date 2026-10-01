@@ -428,6 +428,21 @@ textarea:focus-visible {
   border-color: #58402f;
 }
 
+.summary-item--link {
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.summary-item--link:hover {
+  border-color: var(--color-sand);
+  background: #1f1d19;
+}
+
+.summary-item--link:hover .summary-item__value {
+  color: var(--color-sand);
+}
+
 .summary-item__top {
   display: flex;
   min-height: 20px;

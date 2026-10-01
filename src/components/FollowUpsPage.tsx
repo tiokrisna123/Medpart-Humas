@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { DataState } from "./DataState";
 import { TargetEditForm, type TargetEditValues } from "./TargetEditForm";
@@ -34,8 +34,16 @@ const dateFormatter = new Intl.DateTimeFormat("id-ID", {
 
 export function FollowUpsPage() {
   const { members } = useMember();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const routeFilter = searchParams.get("filter");
   const [targets, setTargets] = useState<FollowUpTarget[]>([]);
-  const [filter, setFilter] = useState<FollowUpFilter>("all");
+  const [filter, setFilter] = useState<FollowUpFilter>(() =>
+    routeFilter === "today" ||
+    routeFilter === "overdue" ||
+    routeFilter === "upcoming"
+      ? routeFilter
+      : "all",
+  );
   const [loading, setLoading] = useState(true);
   const [savingTargetId, setSavingTargetId] = useState<string | null>(null);
   const [editingTargetId, setEditingTargetId] = useState<string | null>(null);
@@ -66,6 +74,14 @@ export function FollowUpsPage() {
   useEffect(() => {
     void refreshTargets();
   }, []);
+
+  function selectFilter(value: FollowUpFilter) {
+    setFilter(value);
+    setSearchParams(
+      value === "all" ? {} : { filter: value },
+      { replace: true },
+    );
+  }
 
   async function saveTarget(
     target: FollowUpTarget,
@@ -174,7 +190,7 @@ export function FollowUpsPage() {
                   filter === value ? " follow-up-filter--active" : ""
                 }`}
                 aria-pressed={filter === value}
-                onClick={() => setFilter(value)}
+                onClick={() => selectFilter(value)}
               >
                 {label}
                 <span>{counts[value]}</span>

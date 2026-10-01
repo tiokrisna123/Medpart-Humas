@@ -110,9 +110,24 @@ function DashboardPage() {
     (target) => getFollowUpBucket(target, now) === "today",
   );
   const metricItems = [
-    { label: "Follow-up hari ini", value: followUpCounts.today, icon: CalendarDays },
-    { label: "Terlambat", value: followUpCounts.overdue, icon: CircleAlert },
-    { label: "7 hari ke depan", value: followUpCounts.upcoming, icon: CalendarClock },
+    {
+      label: "Follow-up hari ini",
+      value: followUpCounts.today,
+      icon: CalendarDays,
+      to: "/follow-ups?filter=today",
+    },
+    {
+      label: "Terlambat",
+      value: followUpCounts.overdue,
+      icon: CircleAlert,
+      to: "/follow-ups?filter=overdue",
+    },
+    {
+      label: "7 hari ke depan",
+      value: followUpCounts.upcoming,
+      icon: CalendarClock,
+      to: "/follow-ups?filter=upcoming",
+    },
   ];
   const activityCounts: Record<MediaActivity, number> =
     dashboardData?.activityCounts ?? {
@@ -197,12 +212,13 @@ function DashboardPage() {
           />
         ) : (
           <div className="summary-grid summary-grid--follow-ups">
-          {metricItems.map(({ label, value, icon: Icon }, index) => (
-            <article
-              className={`summary-item${
+          {metricItems.map(({ label, value, icon: Icon, to }, index) => (
+            <Link
+              className={`summary-item summary-item--link${
                 index === 0 ? " summary-item--lead" : ""
               }`}
               key={label}
+              to={to}
             >
               <div className="summary-item__top">
                 <span>{label}</span>
@@ -225,7 +241,7 @@ function DashboardPage() {
                         ? "Jadwal lewat yang masih perlu ditangani"
                         : "Jadwal mendatang dalam 7 hari"}
               </p>
-            </article>
+            </Link>
           ))}
           </div>
         )}
