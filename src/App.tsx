@@ -496,7 +496,7 @@ function LoginPage() {
           WCM Creative Space
         </span>
 
-        <span className="wordmark__descriptor">
+        <span style={{ textAlign: "center" }} className="wordmark__descriptor">
           MEDIA HUB
         </span>
       </div>
